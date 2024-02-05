@@ -1,0 +1,10 @@
+<div class="dropdown">
+    <button class="btn btn-primary btn-sm dropdown" id='dropdownMenuButtonBasicDatatable' type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="ri-more-fill align-middle"></i>
+    </button>
+    <div class="dropdown-menu" aria-labelledby='dropdownMenuButtonBasicDatatable'>
+        {% for item in dropdownItems %}
+            <a class="dropdown-item" href="{{ path(item.link, { 'id': dataId }) }}">{{ item.title }}</a>
+        {% endfor %}
+    </div>
+</div>

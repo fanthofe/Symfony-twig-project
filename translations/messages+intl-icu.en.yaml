@@ -1,0 +1,9 @@
+credit_card_title: Card title
+card_holder: Card Holder
+card_full_name: Full Name
+expires: Expires
+card_number: Card Number
+card_holder_placeholder: Add card holder
+card_expire_month: Expire month
+card_expire_year: Expire year
+card_pay_button: Pay button

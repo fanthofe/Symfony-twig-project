@@ -1,0 +1,98 @@
+<div class="card">
+    <div class="card-body">
+        <h4 id="tableTitle" class="card-title mb-3">{{ cardTitle }}</h4>
+        <p class="text-muted"></p>
+
+        <a id="tableAddButton" class='btn btn-primary' href="{{ addButton }}">Ajouter</a>
+        
+        <div class="content">
+            <div class="database-table mt-4">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">{{ tableTitle }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="alternative-pagination_wrapper{{ cardTitle|replace({' ': ''}) }}" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="datatableAjax{{ cardTitle|replace({' ': ''}) }}" width="100%" class="table nowrap cell-border display hover dt-responsive align-middle table-hover table-bordered dataTable no-footer dtr-inline" style="width: 100%;" aria-describedby="alternative-pagination_info">
+                                                <thead>
+                                                    <tr>
+                                                        {% for column in columnsFrName %}
+                                                            <th class="sort {{column}}" data-sort="{{column}}" >{{ column }}</th>
+                                                        {% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                </div>
+                                {# {{datatable}} #}
+                            </div>
+                        </div>
+                    </div><!--end col-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+<script>
+    $(function(){
+
+        $(".table").on("click",'.delete', function(e){
+            var r = confirm("Êtes-vous sûr de vouloir supprimer ?");
+            
+            if (r == true) {
+                return;
+            } else {
+                e.preventDefault();
+            }
+        });
+    })
+
+    table = $('#datatableAjax{{ cardTitle|replace({' ': ''}) }}').DataTable({
+        processing : true,
+        serverSide: true,
+        searching: true,
+        pageLength: 10,
+        deferRender: true,
+        responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        },
+        ajax: {
+           url: "{{ path(ajaxLink) }}"
+        },
+        dom: "<'row'<'col-sm-6'B><'col-sm-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        columns: [
+        {% for key, column in columnsName %}
+            {% if key == 0 %}
+                {
+                    data: "{{column}}",
+                    className: 'dt-control',
+                    orderable: true,
+                },         
+            {% else %}
+                {
+                    data: "{{column}}",
+                },  
+            {% endif %}
+        {% endfor %}
+        ],
+    });
+    
+</script>
+    
+{% endblock %}

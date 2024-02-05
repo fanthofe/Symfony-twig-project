@@ -1,0 +1,31 @@
+<div class="mail-confirmation">
+    <h1>Bonjour {{ username }},</h1>
+
+    <p>
+        Nous devons vérifier votre adresse e-mail avant que vous puissiez accéder à notre portail client.   
+        Merci de confirmer votre adresse mail en cliquant sur le lien ci-dessous: <br><br>
+        <a href="{{ signedUrl|raw }}">Confirmer mon adresse mail</a><br><br>
+        Ce lien expirera dans <strong>{{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}</strong>.
+    </p>
+
+    <p>
+        Merci !<br><br>
+        L’équipe de 69pixl
+    </p>
+</div>
+
+<style>
+
+    .mail-confirmation{
+        font-family: "Arial", sans-serif;
+    }
+
+    .mail-confirmation p a{
+        text-decoration: none;
+    }
+
+    .mail-confirmation p a:hover{
+        text-decoration: underline;
+    }
+
+</style>

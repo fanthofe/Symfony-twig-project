@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="position-relative mx-n4 mt-n4">
+            <div class="profile-wid-bg profile-setting-img">
+                <img src="/images/profile-bg.jpg" class="profile-wid-img" alt="">
+                <div class="overlay-content">
+                    <div class="text-end p-3">
+                        <div class="p-0 ms-auto rounded-circle profile-photo-edit">
+                            <input id="profile-foreground-img-file-input" type="file" class="profile-foreground-img-file-input">
+                            <label for="profile-foreground-img-file-input" class="profile-photo-edit btn btn-light">
+                                <i class="ri-image-edit-line align-bottom me-1"></i> Changer Image de couverture
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xxl-3">
+                <div class="card mt-n5">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                                <img src="{{ user.profilImage }}" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image">
+                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                    <input id="profile-img-file-input" type="file" class="profile-img-file-input">
+                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                                        <span class="avatar-title rounded-circle bg-light text-body">
+                                            <i class="ri-camera-fill"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <h5 class="fs-16 mb-1">{{ user.firstName }} {{ user.lastName }}</h5>
+                            <p class="text-muted mb-0">{{ user.job }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!--end card-->
+            </div>
+            <!--end col-->
+            <div class="col-xxl-9">
+                <div class="card mt-xxl-n5">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                            <li class="nav-item">
+                                <a id="personalDetailsLink" class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab">
+                                    <i class="fas fa-home"></i> Détails
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="changePasswordLink" class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
+                                    <i class="far fa-user"></i> Changer le mot de passe
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="personalDetails" role="tabpanel">
+                                {{ form_start(formEditProfil, { 'action': path('profil_edit') }) }}
+                                    {% for key, f in formEditProfil %}
+                                        {% if f == formEditProfil|last %}
+                                            <div class="col-lg-12">
+                                                <a href="{{ path('profil') }}"><button type="button" class="btn btn-primary">Quitter</button></a> 
+                                                {{ form_widget(f,{ 'attr': {'class': 'btn btn-primary'}}) }}
+                                            </div>
+                                        {% elseif key == 'dateEntry' %}
+                                            <div class="col-lg-6">
+                                                <div class="mb-4">
+                                                    {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(f, { 'attr': {'class': 'form-control flatpickr-input', 'data-provider': 'flatpickr'}}) }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-lg-6">
+                                                <div class="mb-4">
+                                                    {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(f, { 'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {{ form_end(formEditProfil) }}
+                            </div>
+                            <!--end tab-pane-->
+                            <div class="tab-pane" id="changePassword" role="tabpanel">
+                                {{ form_start(formPassword, { 'action': path('profil_edit') }) }}
+                                    {% for type, flash_messages in app.session.flashBag.all %}
+                                        {% for flash_message in flash_messages %}
+                                            <div role="alert" class="alert alert-{{ type }} alert-icon alert-dismissible">
+                                                <div class="icon"><span class="s7-check"></span></div>
+                                                <div class="message">
+                                                    {{ flash_message|raw }}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    {% if form_errors(formPassword.plainPassword)|trim('<ul><li></li></ul>') != "" %}
+                                        <div class="alert alert-danger alert-dismissible error-modal fade show" role="alert">
+                                            {{ form_errors(formPassword.plainPassword)|trim('<ul><li></li></ul>') }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="col-lg-12">
+                                        <div class="mb-4">
+                                            {{ form_label(formPassword.oldPassword, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(formPassword.oldPassword, { 'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="mb-4">
+                                            {{ form_label(formPassword.plainPassword.first, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(formPassword.plainPassword.first, { 'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="mb-4">
+                                            {{ form_label(formPassword.plainPassword.second, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(formPassword.plainPassword.second, { 'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <a href="{{ path('profil_edit') }}"><button type="button" class="btn btn-primary">Quitter</button></a>
+                                        {{ form_widget(formPassword.save,{ 'attr': {'class': 'btn btn-primary editPassword'}}) }}
+                                    </div>
+                                {{ form_end(formPassword) }}
+                            </div>
+                            <!--end tab-pane-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+        <!--end row-->
+    </div>
+    <!-- container-fluid -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script>
+        var pathname = window.location.pathname;
+        var href = window.location.href;
+
+        if(href.substring(href.length - pathname.length) != pathname || $('#changePassword .error-modal').length != 0){
+            $("#personalDetailsLink").removeClass("active");
+            $("#personalDetails").removeClass("active show");
+            $("#changePasswordLink").addClass("active");
+            $("#changePassword").addClass("active show");
+        }
+
+        $(function(){
+            $("#profile-img-file-input").on("change", function(e){
+
+                var file = e.target.files[0];
+                if(['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].indexOf(file.type) == -1) {
+                    $(".replace-with").replaceWith("<div class='alert alert-danger alert-dismissible fade show' role='alert'>Seuls les fichiers JPEG et PNG sont acceptés<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onload = function(){
+                    var data = {'title': 'upload_image', 'file':reader.result};
+
+                    $.ajax({               
+                        url: '{{ path("profil_image_upload_ajax") }}',
+                        data: data,
+                        type: 'POST',
+                        success: function(response, isSuccess){
+                            $(".user-profile-image").attr('src', reader.result);
+                            $(".header-profile-user").attr('src', reader.result);
+                            $(".page-content").prepend("<div class='alert alert-success alert-dismissible fade show' role='alert'>L'image de profil a bien été modifié<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                        },
+                        error: function (response){
+                            $(".page-content").prepend("<div class='alert alert-danger alert-dismissible fade show' role='alert'>Un problème est survenu<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                        }
+                    });
+                };
+                reader.readAsDataURL(file); 
+            })
+        });
+    </script>
+{% endblock %}

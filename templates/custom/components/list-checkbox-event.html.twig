@@ -1,0 +1,259 @@
+<div class="col-xxl-7">
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card card-height-100">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">Mes Taches</h4>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="text-muted"><i class="ri-settings-4-line align-middle me-1 fs-15"></i>Paramètres</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a id="buttonModify" class="dropdown-item">Modifier</a>
+                                <a id="buttonDelete" class="dropdown-item">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card header -->
+
+                <div class="card-body p-0">
+
+                    <div class="align-items-center p-3 justify-content-between d-flex">
+                        {# <div class="flex-shrink-0">
+                            <div id="listDisplay" class="text-muted"><span class="fw-semibold">3</span> sur <span class="fw-semibold">10</span> restants</div>
+                        </div> #}
+                        <button id="addTask" type="button" class="btn btn-sm btn-success"><i class="ri-add-line align-middle me-1"></i> Ajouter une tâche</button>
+                    </div><!-- end card header -->
+
+                    <div id="simpleBar" data-simplebar style="max-height: 257px;">
+                        <ul id="list-group" class="list-group list-group-flush border-dashed px-3">
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_one">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_one">Review and make sure nothing slips through cracks</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">15 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_two">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_two">Send meeting invites for sales upcampaign</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">20 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check flex-sharink-0 ps-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_three">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_three">Weekly closed sales won checking with sales team</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">24 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item ps-0">
+                                <div class="d-flex align-items-start">
+                                    <div class="form-check ps-0 flex-sharink-0">
+                                        <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that can be viewed from the individual view</label>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <p id="date" class="text-muted fs-12 mb-0">27 Sep, 2021</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul><!-- end ul -->
+                    </div>
+                    <div class="p-3">
+                        <a id="displayMore" href="javascript:void(0);" class="text-muted text-decoration-underline">Afficher plus...</a>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+    </div><!-- end row-->
+</div> <!-- end col-xl-7-->
+
+{% block javascripts %}
+<script>
+    var isActive = true; 
+    var originalDivHeight = $('#simpleBar').height();
+
+    $('#buttonModify').on('click', function(){
+        $('input[type="checkbox"]:checked').closest("li").each(function(){
+            $(this).children('div').children('.flex-grow-1').children('label').replaceWith(`
+                <input type="text" class="ms-2 modified" id="inputText" placeholder="Ajouter un titre" style="width:300px;">
+            `);
+            $(this).children('div').children('.flex-shrink-0').children('p').each(function(){
+                console.log($(this).text().length);
+            });
+        });
+    });
+
+    $('#buttonDelete').on('click', function(){
+        $('input[type="checkbox"]:checked').closest('li').remove();
+    });
+
+    $('#displayMore').on('click', function(){
+        var listHeight = $('#list-group').height();
+        var divHeight = $('#simpleBar').height();
+    
+        if(listHeight > divHeight){
+            $('#simpleBar').css({ "max-height": listHeight });
+            $('#displayMore').text('Afficher moins...');
+        } else if (listHeight == divHeight){
+            $('#simpleBar').css({ "max-height": originalDivHeight });
+            $('#displayMore').text('Afficher plus...');
+        }
+    });
+
+    $("#addTask").on('click', function(){
+        var total = $('#list-group li').length; 
+        
+        if(isActive == true){
+            isActive = false;
+            $('#list-group').prepend($(`
+                <li class="list-group-item ps-0">
+                    <div class="d-flex align-items-start">
+                        <div class="form-check ps-0 flex-sharink-0">
+                            <input id="checkbox" type="checkbox" class="form-check-input ms-0" id="task_${total}">
+                        </div>
+                        <div class="flex-grow-1">
+                            <input type="text" class="ms-2" id="inputText" placeholder="Ajouter un titre" style="width:250px;">
+                        </div>
+                        <div class="flex-shrink-0 ms-2">
+                            <input type="date" id="inputDate" style="color:#878a99;"/>
+                        </div>
+                    </div>
+                </li>
+            `));
+        }
+    });
+
+    $(document).on('keypress', function(){
+        $('.modified').on('change', function(){
+            $(this).addClass('clicked');
+        });
+    })
+
+    $(document).on('keypress', function(e){
+        var total = $('#list-group li').length - 1; 
+        var inputValue = $(`#inputText`).val();
+        var inputDate = $(`#inputDate`).val();
+        const options = { month: "long" };
+        
+        if(isActive == false){
+            if(e.which == 13 && inputValue.length > 0 && inputDate.length > 0){
+                var tempDate = new Date(inputDate);
+                var monthDate = new Intl.DateTimeFormat("fr-FR", options).format(tempDate);
+                var formattedDate = [tempDate.getDate(), monthDate.slice(0, 3)].join(' ');
+                var finalDate = [formattedDate, tempDate.getFullYear()].join(', ');
+
+                $(`#inputText`).replaceWith(`
+                    <label class="form-check-label mb-0 ps-2" for="task_${total}">${$(`#inputText`).val()}</label>
+                `);
+
+                $(`#inputDate`).replaceWith(`
+                    <p id="date" class="text-muted fs-12 mb-0" style="text-transform:capitalize;">${finalDate}</p>
+                `);
+
+                isActive = true;
+            } 
+        }
+
+        if(e.which == 13 && $('.clicked').val().length > 0){
+            $('.clicked').each(function(){
+                var idName = $(this).closest('li').children('div').children('.form-check').children('input').attr('id');
+                $(`#inputText`).replaceWith(`
+                    <label class="form-check-label mb-0 ps-2" for="${idName}">${$(`#inputText`).val()}</label>
+                `);
+            });
+        }
+
+    });
+
+</script>
+    
+{% endblock %}

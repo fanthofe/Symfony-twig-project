@@ -1,0 +1,26 @@
+{# templates/auth/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block bodyFullScreen %}
+
+    {% for message in app.session.flashBag.get('success') %}
+        <div class="alert flash-message alert-success fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    
+    {# Basic login #}
+    {{ include('auth/auth-signin-basic.html.twig') }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <!-- particles js -->
+    <script src="/libs/particles.js/particles.js"></script>
+    <!-- particles app js -->
+    <script src="/js/pages/particles.app.js"></script>
+    <!-- password-addon init -->
+    <script src="/js/pages/password-addon.init.js"></script>
+{% endblock %}

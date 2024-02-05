@@ -1,0 +1,59 @@
+<div class="card-body">
+    <div class="text-end">
+        <a class="btn btn-sm btn-soft-primary" id="edit-event-btn" data-id="edit-event" role="button">Modifier</a>
+    </div>
+    <div class="event-details">
+        <div class="d-flex mb-2">
+            <div class="flex-grow-1 d-flex align-items-center">
+                <div class="flex-shrink-0 me-3">
+                    <i class="ri-calendar-event-line text-muted fs-16"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="d-block fw-semibold mb-0" id="event-start-date-tag">Du {{ event.startDate|date("d M Y") }} au {{ event.endDate|date("d M Y") }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+            <div class="flex-shrink-0 me-3">
+                <i class="ri-time-line text-muted fs-16"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="d-block fw-semibold mb-0"><span id="event-timepicker1-tag">{{ event.startDate|date("H:i") }}</span> - <span id="event-timepicker2-tag">{{ event.endDate|date("H:i") }}</span></h6>
+            </div>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+            <div class="flex-shrink-0 me-3">
+                <i class="ri-map-pin-line text-muted fs-16"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="d-block fw-semibold mb-0"> <span id="event-location-tag">{{ event.localisation }}</span></h6>
+            </div>
+        </div>
+        <div class="d-flex mb-3">
+            <div class="flex-shrink-0 me-3">
+                <i class="ri-discuss-line text-muted fs-16"></i>
+            </div>
+            <div class="flex-grow-1">
+                <p class="d-block text-muted mb-0" id="event-description-tag">{{ event.description }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="hstack gap-2 justify-content-end">
+        <a class="btn btn-soft-danger" id="btn-delete-event" href="{{ path('event_delete', { 'id': event.id }) }}"><i class="ri-close-line align-bottom"></i> Supprimer</a>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script>
+        $(document).ready( function () {
+            $('#btn-delete-event').on('click', function(e){
+                var r = confirm("Êtes-vous sûr de vouloir supprimer cette évènement ?");
+                if (r == true) {
+                    return;
+                } else {
+                    e.preventDefault();
+                }
+            });
+        } );
+    </script>
+{% endblock %}

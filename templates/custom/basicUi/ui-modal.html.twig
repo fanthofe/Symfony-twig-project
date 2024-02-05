@@ -1,0 +1,22 @@
+<div id="eventModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 overflow-hidden">
+            <div class="modal-header p-3" style="background-color: #e2e5ed;">
+                <h4 id="modalTitle" class="card-title mb-0">Ajouter</h4>
+                <button id="closeButton" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="loaderModal" class="lds-dual-ring overlay"></div>
+                <div id="modalBody" class="display-none"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% block javascripts %}
+    <script>
+        $('#closeButton').on('click', function(){
+            $('#eventModal').removeClass('show');
+        })
+    </script>
+{% endblock %}

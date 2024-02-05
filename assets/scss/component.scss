@@ -1,0 +1,267 @@
+@import 'utils';
+@import 'variables';
+
+.dropdown-list{
+    margin-bottom: 0px !important;
+    padding-left: 0px !important;
+
+    .dropdown-item{
+        cursor: pointer;
+    }
+}
+
+// DataTables Component
+#datatableAjax_paginate, #datatableBasic_paginate{
+    .pagination{
+        .paginate_button{
+            padding: 0px;
+
+            &:hover{
+                border: 1px solid transparent;
+                color: transparent;
+                background-color: transparent;
+                background: transparent;
+            }
+        }
+    }
+}
+
+#table-gridjs-custom{
+    .gridjs-footer{
+        .gridjs-pages{
+            .gridjs-currentPage{
+                background-color: #405189 !important;
+            }
+        }
+    }
+}
+
+//form UI Select2
+// .select2-selection--single{
+//     height: 37px !important;
+//     border-radius: 0.25rem;
+//     border: 1px solid #ced4da !important;
+// }
+
+// .select2-selection__placeholder{
+//     color: #878a99 !important;
+// }
+
+// .select2-selection__rendered{
+//     line-height: 35px !important;
+//     padding: 0px 0.9rem !important;
+// }
+
+// .select2-selection__clear, .select2-selection__arrow{
+//     height: 36px !important;
+// }
+
+// .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
+//     background-color: #405189 !important;
+// }
+
+//Display modal
+#eventModal{
+    &.show{
+        display: block;
+        background-color: rgba(0,0,0,0.5);
+    }
+} 
+
+.fc-icon-chevron-left:before, .fc-icon-chevron-right:before{
+    content: none !important;
+}
+
+.fc-event-title{
+    font-size: 1.15em !important;
+}
+
+.fc-button{
+    color: #fff !important;
+    background-color: #405189 !important;
+    border: none !important;
+
+    &:hover{
+        background-color: #33416e !important;
+        border-color: #33416e !important;
+    }
+}
+
+.fc-button:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.fc-button-active, .fc-prev-button:hover, .fc-next-button:hover{
+    background-color: #33416e !important;
+    border-color: #33416e !important;
+    color: #fff !important;
+}
+
+.fc-day-today {
+    background: rgba(64, 81, 137, .65) !important;
+    border: none !important;
+    //#e2e5ed
+} 
+
+.display-none {
+    display: none !important;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,.8);
+    z-index: 999;
+    opacity: 1;
+    transition: all 0.5s;
+}
+ 
+
+.lds-dual-ring {
+    display: inline-block;
+}
+
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 5% auto;
+    border-radius: 50%;
+    border: 6px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+//Articles Component
+.ql-editor{
+    min-height: 200px !important;
+}
+
+.bloc-text{
+    display: flex;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .title{
+        font-size: 40px;
+    }
+
+    .subtitle{
+        font-size: 17px;
+    }
+
+    .label{
+        font-size: 15px;
+    }
+
+    .pres-style{
+        color: white;
+        text-align: center;
+    }
+}
+
+.bloc-content{
+    margin-top: 260px;
+    margin-bottom: 80px;
+    padding: 0px 150px;
+    display: flex;
+
+    .picture-bg{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 4rem;
+    }
+
+    .article-content{
+        text-align: justify;
+    }
+}
+
+.image-article{
+    width: 400px;
+}
+
+.card-img-top{
+    height: 260px !important;
+    object-fit: cover;
+}
+
+.actuality-card{
+    min-height: 240px;
+}
+
+.actuality-image{
+    height: 255px !important;
+    width: 100%;
+    object-fit: cover;
+}
+
+.actuality-pagination{
+    flex-direction: column;
+    margin-bottom: 30px;
+
+    .pagination-text{
+        margin-bottom: 15px;
+    }
+}
+
+.label-category{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.page-item{
+    .page-link{
+        cursor: pointer;
+        
+        &.disabled{
+            cursor: auto;
+        }
+    }
+}
+
+//Forgot password 
+
+#password-contain{
+    &.show{
+        display: block !important;
+    }
+}
+
+//Check button in Settings page
+.check-button-settings{
+    padding-left: 0 !important;
+
+    .input-settings{
+        margin-right: -5.6em !important;
+    }
+}
+
+//Add overflow to AddChatUser in Chats page
+
+.dropdown-overflow{
+    overflow-y: scroll;
+    height: 100%;
+}

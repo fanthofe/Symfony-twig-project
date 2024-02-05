@@ -1,0 +1,18 @@
+{# Calendar #}
+<div {{ stimulus_controller('form-modal') }}>
+    <div class="col-xl-9">
+        <div class="card card-h-100">
+            <div class="card-body">
+                <div id="loader" class="lds-dual-ring display-none overlay"></div>
+                <div id="calendar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ 
+        component ('ui-modal-stimulus')   
+    }}
+</div>
+
+

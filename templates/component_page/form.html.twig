@@ -1,0 +1,45 @@
+<div class="card-body">
+    {{ form_start(form, { 'action': path('get_event_form', {'id': eventId })} ) }}
+        <div class="row">
+            {% for key, f in form %}
+                {% if f == form|last %}
+                    <div class="col-lg-12">
+                        {{ form_widget(f, { 'attr': {
+                            'class': 'btn btn-primary', 
+                            'data-action': 'click->form-modal#submitForm', 
+                            'data-form-modal-url-submit-param': eventId
+                            }}) 
+                        }}
+                    </div>
+                {% elseif (key == 'startDate' or key == 'endDate') %}
+                    <div class="col-6">
+                        <div class="mb-4">
+                            {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(f, { 'attr': {'class': 'picker form-control input-inline flatpickr-input'}}) }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-6">
+                        <div class="mb-4">
+                            {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(f, { 'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div><!--end row-->
+    {{ form_end(form) }}
+</div>
+
+{% block javascripts %}
+    <script>
+        $('.picker').flatpickr({
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        $('#date_event_form_save').on('click', function(e){
+            e.preventDefault();
+        })
+    </script>
+{% endblock %}

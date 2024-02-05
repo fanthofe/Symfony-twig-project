@@ -1,0 +1,234 @@
+{% extends 'base-vitrine.html.twig' %}
+
+{% block body %}
+<section id="actualites" class="section mt-5">
+    <div class="container-fluid">
+        <div class="row card-row">
+            {% for article in articles.data %}
+                {% set image = (article.image[:4] == "http") ? article.image : article_img_directory ~ article.image %}
+                <div class="col-lg-6 col-xxl-6 card-content">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-8">
+                                <div class="actuality-card">
+                                    <div class="card-header">
+                                        <h5 class="article-title card-title mb-1">{{ article.title }}</h5>
+                                        <div class="label-category">
+                                            {% for key, label in article.category %}
+                                                <span class="badge 
+                                                {% if key == 0 %}
+                                                    bg-warning 
+                                                {% elseif key == 1 %}
+                                                    bg-success 
+                                                {% elseif key == 2 %}
+                                                    bg-info
+                                                {% else %}
+                                                    bg-danger
+                                                {% endif %}
+                                                align-middle fs-10">{{ label }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <p class="card-text"><small class="article-date text-muted">{{ article.date|date('d M Y') }}</small></p>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="article-desc card-text mb-2">{{ article.shortDescription }}</p>
+                                        <a href="{{path('single_article', {'slug': article.slug } )}}" class="article-link card-link link-secondary">Lire plus <i class="ri-arrow-right-s-line ms-1 align-middle lh-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <img class="article-image actuality-image rounded-end img-fluid" src="{{ image }}" alt="{{ article.image }}">
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            {% endfor %}
+        </div><!-- end row -->
+
+        <div class="actuality-pagination align-items-center mt-2 row text-center">
+            <div class="col-sm pagination-text">
+                <div class="text-muted">Affichage de <span class="number fw-semibold">{{ articles.limit }}</span> sur <span class="fw-semibold">{{ nbAllArticles }}</span> résultats</div>
+            </div>
+            <div class="col-sm-auto">
+                <ul class="pagination pagination-separated pagination-sm justify-content-center justify-content-sm-start mb-0">
+                    <li class="page-item">
+                        <a class="prev-button page-link disabled">←</a>
+                    </li>
+                    {% for i in 1..articles.pages %}
+                        {% if i == 1 %}
+                            <li class="page-item">
+                                <a class="page-number page-link active">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-number page-link">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item">
+                        <a class="next-button page-link">→</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+
+    $(function(){
+        try {
+            var currentPage = 1;
+            const number = $('.number').text();
+            var maxNumber = {{ nbAllArticles }};
+            var allPages = {{ articles.pages }};
+            const options = { weekday: "long" };
+
+
+            $('.page-number').on('click', function(){
+                $('.page-number').removeClass('active')
+                $(this).addClass('active');
+                
+                currentPage = parseInt($(this).text());
+
+                if($('.page-number').last().hasClass('active')){
+                    $('.next-button').addClass('disabled');
+                    $('.number').replaceWith('<span class="number fw-semibold">' + maxNumber + '</span>');
+                } else if ($('.page-number').first().hasClass('active')){
+                    $('.prev-button').addClass('disabled');
+                } else {
+                    $('.prev-button').removeClass('disabled');
+                    $('.next-button').removeClass('disabled');
+                    $('.number').replaceWith('<span class="number fw-semibold">' + number * currentPage + '</span>');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+            $('.next-button').on('click', function(){
+
+                $('.prev-button').removeClass('disabled');
+                currentPage++;
+                $('.page-number').removeClass('active');
+
+                $('.page-number').each(function(i){
+                    if(i == currentPage - 1){
+                        $(this).addClass('active')
+                    }
+                })
+
+                var maxNextNb = currentPage == allPages ? {{ nbAllArticles }} : number * currentPage;
+
+                $('.number').replaceWith('<span class="number fw-semibold">' + maxNextNb + '</span>');
+                
+                if(currentPage == allPages){
+                    $(this).addClass('disabled');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+            $('.prev-button').on('click', function(){
+                $('.next-button').removeClass('disabled');
+                currentPage--;
+                $('.page-number').removeClass('active');
+
+                $('.page-number').each(function(i){
+                    if(i == currentPage - 1){
+                        $(this).addClass('active')
+                    }
+                })
+
+                $('.number').replaceWith('<span class="number fw-semibold">' + number * currentPage + '</span>');
+
+                if(currentPage == 1){
+                    $(this).addClass('disabled');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    });
+
+    function eventAjax(currentPage, number, options){
+        $.ajax({
+            url: `/actualites/pagination-ajax`,
+            method: 'POST',
+            data: {
+                'currentPage' : currentPage,
+                'limit' : number
+            },
+            success: function(data){   
+
+                if(data.data.length){
+                    $('.card-content').remove();
+
+                    for (let i = 0; i < data.data.length; i++) {
+                        var date = new Date(data.data[i].date.date).toLocaleDateString('fr-FR', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                        var imageUrl = data.data[i].image.slice(0, 4) == 'http' ? data.data[i].image : '{{article_img_directory}}' + data.data[i].image
+
+                        $('.card-row').append(`
+                            <div class="col-lg-6 col-xxl-6 card-content">
+                                <div class="card">
+                                    <div class="row g-0">
+                                        <div class="col-md-8">
+                                            <div class="actuality-card">
+                                                <div class="card-header">
+                                                    <h5 class="article-title card-title mb-1">${data.data[i].title}</h5>
+                                                    <div class="label-category">
+                                                    </div>
+                                                    <p class="card-text"><small class="article-date text-muted">${date}</small></p>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="article-desc card-text mb-2">${data.data[i].shortDescription}</p>
+                                                    <a href="{{article_url}}${data.data[i].slug}" class="article-link card-link link-secondary">Lire plus <i class="ri-arrow-right-s-line ms-1 align-middle lh-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img class="article-image actuality-image rounded-end img-fluid" src="${imageUrl}" alt="${data.data[i].image}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                }
+
+                $('.label-category').each(function(el){
+                    $(this).find('.badge').remove();
+
+                    for(let i = 0; i < data.data[el].category.length; i++){
+                        switch (i) {
+                            case 0: 
+                                $(this).append(`<span class="badge bg-warning align-middle fs-10">${data.data[el].category[i].name}</span>`);
+                                break;
+                            case 1: 
+                                $(this).append(`<span class="badge bg-success align-middle fs-10">${data.data[el].category[i].name}</span>`);
+                                break;
+                            case 2: 
+                                $(this).append(`<span class="badge bg-info align-middle fs-10">${data.data[el].category[i].name}</span>`);
+                                break;
+                            default: 
+                                $(this).append(`<span class="badge bg-danger align-middle fs-10">${data.data[el].category[i].name}</span>`);
+                                break;
+                        }
+                    }
+                })
+            }
+        });
+    }
+</script>
+    
+{% endblock %}

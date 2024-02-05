@@ -1,0 +1,31 @@
+
+<div class="reset-password">
+    <h1>Bonjour,</h1>
+
+    <p>Pour réinitialiser votre mot de passe, merci de cliquer sur le lien ci-dessous :</p>
+
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+
+    <p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+    <p>        
+        Merci !<br><br>
+        L’équipe de 69pixl
+    </p>
+</div>
+
+<style>
+
+    .reset-password{
+        font-family: "Arial", sans-serif;
+    }
+
+    .reset-password p a{
+        text-decoration: none;
+    }
+
+    .reset-password p a:hover{
+        text-decoration: underline;
+    }
+
+</style>

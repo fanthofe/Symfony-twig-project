@@ -1,0 +1,70 @@
+{% block stylesheets %}
+    <link href="/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/libs/gridjs/theme/mermaid.min.css" rel="stylesheet">
+
+{% endblock %}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-3">{{ cardTitle }}</h4>
+        <p class="text-muted"></p>
+
+        <a class='btn btn-primary' href="{{ addButton }}">Ajouter</a>
+
+        <div class="content">
+            <div class="grid-js-table mt-4">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0 flex-grow-1">{{ tableTitle }}</h4>
+                            </div><!-- end card header -->
+
+                            <div class="card-body">
+                                <div id="table-gridjs-custom"></div>
+                            </div><!-- end card-body -->
+                        </div><!-- end card -->
+                    </div>
+                    <!-- end col -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+
+    <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/libs/gridjs/gridjs.production.min.js"></script>
+
+    <script>
+
+    const grid = new gridjs.Grid({
+            sort: true,
+            pagination: {
+                limit: 10,
+            },
+            fixedHeader: true,
+            search: true,
+            columns: [
+                {% for column in columnsName %}
+                    { name: "{{column}}" },             
+                {% endfor %}
+                ],
+            server: {
+                url: '{{ path("client_list_gridjs") }}',
+                then: data => data.data.map(c => [
+                    {% for column in columnsName %}
+                        c.{{column}},             
+                    {% endfor %}
+                ])
+            },
+        }).render(document.getElementById("table-gridjs-custom"));
+
+        grid.plugin.add({
+            id: 'myplugin',
+            component: MyPlugin,
+        });
+    </script>
+{% endblock %}

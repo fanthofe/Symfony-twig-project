@@ -1,0 +1,94 @@
+{% extends 'base-vitrine.html.twig' %}
+
+{% block body %}
+    <!-- Begin page -->
+    <div class="layout-wrapper landing pt-4">
+
+        <!-- start contact -->
+        <section class="section" id="contact">
+            <div class="container">
+                {% for type, flash_messages in app.session.flashBag.all %}
+                    {% for flash_message in flash_messages %}
+                        <div role="alert" class="alert alert-{{ type }} alert-icon alert-dismissible">
+                            <div class="icon"><span class="s7-check"></span></div>
+                            <div class="message">
+                            {{ flash_message|raw }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-5">
+                            <h3 class="mb-3 fw-semibold">On reste en contact</h3>
+                            <p class="text-muted mb-4 ff-secondary">Nous prospérons lorsque nous proposons des idées innovantes, mais comprenons également qu'un concept intelligent doit être soutenu par des résultats mesurables.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row gy-4">
+                    <div class="col-lg-4">
+                        <div>
+                            <div class="mt-4">
+                                <h5 class="fs-13 text-muted text-uppercase">Adresse :</h5>
+                                <div class="ff-secondary fw-semibold">6 Cr Lafayette, <br />69003 Lyon</div>
+                            </div>
+                            <div class="mt-4">
+                                <h5 class="fs-13 text-muted text-uppercase">Horaires :</h5>
+                                <div class="ff-secondary fw-semibold">9h00 à 17h00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-lg-8">
+                        <div>
+                            {{ form_start(form) }}
+                                <div class="row">
+                                    {% for key, f in form %}
+                                        {% if f == form|last %}
+                                            <div class="col-lg-12 text-end">
+                                                {{ form_widget(f,{ 'attr': {'class': 'btn btn-primary'}}) }}
+                                            </div>
+                                        {% elseif key == 'name' or key == 'email' %}
+                                            <div class="col-6">
+                                                <div class="mb-4">
+                                                    {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(f, { 'attr': {'class': 'form-control flatpickr-input', 'data-provider': 'flatpickr'}}) }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-12">
+                                                <div class="mb-4">
+                                                    {{ form_label(f, null, { 'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(f, { 'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </section>
+        <!-- end contact -->
+
+        <!--start back-to-top-->
+        <button onclick="topFunction()" class="btn btn-danger btn-icon landing-back-top" id="back-to-top">
+            <i class="ri-arrow-up-line"></i>
+        </button>
+        <!--end back-to-top-->
+
+    </div>
+    <!-- end layout wrapper -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,9 @@
+credit_card_title: 'Carte de crédit'
+card_holder: 'Porteur de la carte de crédit'
+card_full_name: 'Nom complet'
+expires: 'Expire le'
+card_number: 'Numéro de carte de crédit'
+card_expire_month: "Mois d'expiration"
+card_expire_year: "Année d'expiration"
+card_pay_button: 'Payer maintenant'
+card_holder_placeholder: 'Entrer le nom du porteur'

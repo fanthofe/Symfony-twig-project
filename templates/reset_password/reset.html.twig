@@ -1,0 +1,19 @@
+{% block title %}Reset your password{% endblock %}
+
+{% extends 'base.html.twig' %}
+{% block bodyFullScreen %}
+    {# Basic request #}
+    {{ include('auth/auth-pass-change-basic.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <!-- particles js -->
+    <script src="/libs/particles.js/particles.js"></script>
+    <!-- particles app js -->
+    <script src="/js/pages/particles.app.js"></script>
+    <!-- validation init -->
+    <script src="/js/pages/form-validation.init.js"></script>
+    <!-- password create init -->
+    <script src="/js/pages/passowrd-create.init.js"></script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        {{ component ('ui-alert',{ 
+            isSuccess: true,
+            })  
+        }} 
+        <div class="row">
+            <div class="col-12">
+                <div class="h-100">
+                    <div class="row mb-3 pb-1">
+                        <div class="col-12">
+                            {{ component ('datatable-ajax',{ 
+                                cardTitle: 'Client',
+                                tableTitle: 'Liste des clients',
+                                columnsName: columns,
+                                ajaxLink: ajaxLink,
+                                addButton: addButton
+                                })  
+                            }} 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+{% endblock %}

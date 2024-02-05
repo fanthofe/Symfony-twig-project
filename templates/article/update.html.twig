@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="h-100">
+                    <div class="row mb-3 pb-1">
+                        <div class="col-12">
+                            {{ component ('form-update',{ 
+                                entityName: 'article',
+                                entity: article,
+                                entityId: articleId,
+                                form: form,
+                                typeForm: typeForm
+                                })  
+                            }} 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+{% endblock %}

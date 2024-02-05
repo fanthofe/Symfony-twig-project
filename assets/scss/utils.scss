@@ -1,0 +1,11 @@
+@mixin media-query($size) {
+  @media only screen and (min-width: $size) {
+    @content
+  }
+};
+
+@mixin media-query-between($sizeOne, $sizeTwo) {
+  @media screen and (min-width: $sizeOne) and (max-width: $sizeTwo) {
+    @content
+  }
+};

@@ -1,0 +1,20 @@
+{# templates/components/card.html.twig #}
+
+<!-- Simple card -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-3"><i class="ri-user-3-fill align-middle me-1 text-muted"></i> {{ title }}</h4>
+        <p class="text-muted">{{ description }}</p>
+        
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    {% if isFooter %}
+        <div class="card-footer text-center">
+            {% block footer %}{% endblock %}
+        </div>
+    {% endif %}
+</div>
+                    

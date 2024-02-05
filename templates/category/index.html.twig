@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="h-100">
+                    <div class="row mb-3 pb-1">
+                        <div class="col-12">
+                            {{ component ('datatable-ajax',{ 
+                                cardTitle: 'Catégories',
+                                tableTitle: 'Liste des catégories',
+                                columnsName: columns,
+                                columnsFrName: columnFr,
+                                ajaxLink: ajaxLink,
+                                addButton: addButton
+                                })  
+                            }} 
+
+                            {{
+                                component ('ui-modal')
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        if($('#tableTitle').text() == 'Catégories'){
+            $('#tableAddButton').on('click', function(e){
+                e.preventDefault();
+
+                $('#eventModal').addClass('show');
+                $.ajax({
+                    url: '{{path("category_update", {"id" : "new-category"})}}',
+                    method: 'GET',
+                    beforeSend: function(){
+                        $('#loaderModal').removeClass('display-none')
+                    },
+                    success: function(data){ 
+                        $('#modalBody').removeClass('display-none') 
+                        $('#modalBody').html(data);
+                    },
+                    complete: function () {
+                        $('#loaderModal').addClass('display-none')  
+                    },
+                })
+            });
+
+            $('tr').on('click', function(){
+                var id = $(this).children().first().text();
+
+                $(this).children().last().find('.ajax-edit-btn').on('click', function(e){
+                    e.preventDefault();
+
+                    $('#eventModal').addClass('show');
+                    $.ajax({
+                        url: `/app/category/${id}/update`,
+                        method: 'GET',
+                        beforeSend: function(){
+                            $('#loaderModal').removeClass('display-none')
+                        },
+                        success: function(data){ 
+                            $('#modalBody').removeClass('display-none') 
+                            $('#modalBody').html(data);
+                        },
+                        complete: function () {
+                            $('#loaderModal').addClass('display-none')  
+                        },
+                    });
+                });
+            })
+        }
+    </script>
+{% endblock %}

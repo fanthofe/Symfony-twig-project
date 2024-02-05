@@ -1,0 +1,95 @@
+{% block stylesheets %}
+    <link href="/css/bootstrap.min.css"></link>
+    <link href="/css/icon.min.css"></link>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.1/r-2.5.0/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+{% endblock %}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-3"><i class="ri-user-3-fill align-middle me-1 text-muted"></i>{{ cardTitle }}</h4>
+        <p class="text-muted"></p>
+        
+        <a class='btn btn-primary' href="{{ addButton }}">Ajouter</a>
+
+        <div class="content">
+            <div class="database-table mt-4">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">{{ tableTitle }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="alternative-pagination_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="datatableBasic" class="table nowrap cell-border display hover dt-responsive align-middle table-hover table-bordered dataTable no-footer dtr-inline" style="width: 100%;" aria-describedby="alternative-pagination_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        {% for column in columnsName %}
+                                                            <th class="sort {{column}}" data-sort="{{column}}" >{{ column }}</th>
+                                                        {% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody>
+                                                    {% for data in datas %}
+                                                        <tr>
+                                                        <td></td>
+                                                        {% for row in data %}
+                                                            <td>{{ row }}</td>
+                                                        {% endfor %}
+                                                            <td>
+                                                                {{ component ('ui-dropdown',{ 
+                                                                        dropdownTitle: "Actions",
+                                                                        dropdownItems: actions,
+                                                                        dataId: data.id,
+                                                                    })  
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                </div>
+                                {# {{datatable}} #}
+                            </div>
+                        </div>
+                    </div><!--end col-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+<script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.1/r-2.5.0/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // Ajouter une condition pour utiliser l'ajax ou non 
+    var table = $('#datatableBasic').DataTable({
+        processing : true,
+        searching: true,
+        paging: true,
+        pageLength: 10,
+        responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+    });
+    </script>
+    
+{% endblock %}

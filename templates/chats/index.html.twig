@@ -1,0 +1,951 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
+            <div class="chat-leftsidebar">
+                <div class="px-4 pt-4 mb-3">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-grow-1">
+                            <h5 class="mb-4">Chats</h5>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" title="Add Contact">
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-soft-success btn-sm">
+                                    <i class="ri-add-line align-bottom"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" class="form-control bg-light border-light" placeholder="Search here...">
+                        <i class="ri-search-2-line search-icon"></i>
+                    </div>
+                </div> <!-- .p-4 -->
+
+                <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#chats" role="tab">
+                            Chats
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#contacts" role="tab">
+                            Contacts
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="chats" role="tabpanel">
+                        <div class="chat-room-list pt-3" data-simplebar>
+                            <div class="d-flex align-items-center px-4 mb-2">
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-0 fs-11 text-muted text-uppercase">Direct Messages</h4>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-soft-success btn-sm shadow-none" id="addChatContactButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" title="New Message">    
+                                            <i class="ri-add-line align-bottom"></i>
+                                        </div>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-md dropdown-overflow p-2" aria-labelledby="addChatContactButton">
+                                        <ul class="list-unstyled chat-list chat-user-list" id="userChatList">
+                                        {% for key, chatUser in allChatUsers %}
+                                            <li id="chat-id-{{ chatUser.id }}" class="chat-id">
+                                                <a href="javascript: void(0);">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                            <div class="avatar-xxs">
+                                                                <img src="{{ chatUser.profil_image }}" alt="" class="rounded-circle img-fluid user-profile">
+                                                                <span class="user-status"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1 overflow-hidden">
+                                                            <p class="text-truncate mb-0">{{ chatUser.first_name }} {{ chatUser.last_name }}</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message-list">
+
+                                <ul class="list-unstyled chat-list chat-user-list" id="userList">
+                                    {% for key, chatUser in chats %}
+                                        <li id="contact-id-{{ chatUser[0].id }}" data-name="direct-message">
+                                            <a href="javascript: void(0);">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                        <div class="avatar-xxs">
+                                                            <img src="{{ chatUser[0].profil_image }}" alt="" class="rounded-circle img-fluid user-profile">
+                                                            <span class="user-status"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-truncate mb-0">{{ chatUser[0].first_name }} {{ chatUser[0].last_name }}</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <div class="d-flex align-items-center px-4 mt-4 pt-2 mb-2">
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-0 fs-11 text-muted text-uppercase">Channels</h4>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" title="Create group">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-soft-success btn-sm">
+                                            <i class="ri-add-line align-bottom"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message-list">
+
+                                <ul class="list-unstyled chat-list chat-user-list mb-0" id="channelList">
+                                </ul>
+                            </div>
+                            <!-- End chat-message-list -->
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="contacts" role="tabpanel">
+                        <div class="chat-room-list pt-3" data-simplebar>
+                            <div class="sort-contact">            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end tab contact -->
+            </div>
+            <!-- end chat leftsidebar -->
+            <!-- Start User chat -->
+            <div class="user-chat w-100 overflow-hidden">
+
+                <div class="chat-content d-lg-flex">
+                    <!-- start chat conversation section -->
+                    <div class="w-100 overflow-hidden position-relative">
+                        <!-- conversation user -->
+                        <div class="position-relative">
+                            
+
+                            <div class="position-relative" id="users-chat">
+                                <div class="p-3 user-chat-topbar">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-4 col-8">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 d-block d-lg-none me-3">
+                                                    <a href="javascript: void(0);" class="user-chat-remove fs-18 p-1"><i class="ri-arrow-left-s-line align-bottom"></i></a>
+                                                </div>
+                                                <div class="flex-grow-1 overflow-hidden">
+                                                    <div class="d-flex align-items-center users-chat-content">
+                                                        <div class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                                                            <img src="{{ chats[0][0].profil_image }}" class="rounded-circle avatar-xs" alt="">
+                                                            <span class="user-status"></span>
+                                                        </div>
+                                                        <div class="flex-grow-1 overflow-hidden">
+                                                            <h5 class="text-truncate mb-0 fs-16"><a class="text-reset username" data-bs-toggle="offcanvas" href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">{{ chats[0][0].first_name }} {{ chats[0][0].last_name }}</a></h5>
+                                                            <p class="text-truncate text-muted fs-14 mb-0 userStatus"><small>Online</small></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8 col-4">
+                                            <ul class="list-inline user-chat-nav text-end mb-0">
+                                                <li class="list-inline-item m-0">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-ghost-secondary btn-icon" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i data-feather="search" class="icon-sm"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg">
+                                                            <div class="p-2">
+                                                                <div class="search-box">
+                                                                    <input type="text" class="form-control bg-light border-light" placeholder="Search here..." onkeyup="searchMessages()" id="searchMessage">
+                                                                    <i class="ri-search-2-line search-icon"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                                <li class="list-inline-item d-none d-lg-inline-block m-0">
+                                                    <button type="button" class="btn btn-ghost-secondary btn-icon" data-bs-toggle="offcanvas" data-bs-target="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">
+                                                        <i data-feather="info" class="icon-sm"></i>
+                                                    </button>
+                                                </li>
+
+                                                <li class="list-inline-item m-0">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-ghost-secondary btn-icon" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i data-feather="more-vertical" class="icon-sm"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a class="dropdown-item d-block d-lg-none user-profile-show" href="#"><i class="ri-user-2-fill align-bottom text-muted me-2"></i> View Profile</a>
+                                                            <a class="dropdown-item" href="#"><i class="ri-inbox-archive-line align-bottom text-muted me-2"></i> Archive</a>
+                                                            <a class="dropdown-item" href="#"><i class="ri-mic-off-line align-bottom text-muted me-2"></i> Muted</a>
+                                                            <a class="dropdown-item" href="#"><i class="ri-delete-bin-5-line align-bottom text-muted me-2"></i> Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- end chat user head -->
+                                <div class="chat-conversation p-3 p-lg-4 " id="chat-conversation" data-simplebar>
+                                    <div id="elmLoader" class="d-none">
+                                        <div class="spinner-border text-primary avatar-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <ul class="list-unstyled chat-conversation-list" id="users-conversation">
+                                        
+                                    </ul>
+                                    <!-- end chat-conversation-list -->
+                                </div>
+                                <div class="alert alert-warning alert-dismissible copyclipboard-alert px-4 fade show " id="copyClipBoard" role="alert">
+                                    Message copied
+                                </div>
+                            </div>
+
+                            {# <div class="position-relative" id="channel-chat">
+                                <div class="p-3 user-chat-topbar">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-4 col-8">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0 d-block d-lg-none me-3">
+                                                <a href="javascript: void(0);" class="user-chat-remove fs-18 p-1"><i class="ri-arrow-left-s-line align-bottom"></i></a>
+                                            </div>
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                                                        <img src="/images/users/avatar-2.jpg" class="rounded-circle avatar-xs" alt="">
+                                                    </div>
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <h5 class="text-truncate mb-0 fs-16"><a class="text-reset username" data-bs-toggle="offcanvas" href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">Lisa Parker</a></h5>
+                                                        <p class="text-truncate text-muted fs-14 mb-0 userStatus"><small>24 Members</small></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 col-4">
+                                        <ul class="list-inline user-chat-nav text-end mb-0">
+                                            <li class="list-inline-item m-0">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-ghost-secondary btn-icon" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="search" class="icon-sm"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg">
+                                                        <div class="p-2">
+                                                            <div class="search-box">
+                                                                <input type="text" class="form-control bg-light border-light" placeholder="Search here..." onkeyup="searchMessages()" id="searchMessage">
+                                                                <i class="ri-search-2-line search-icon"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li class="list-inline-item d-none d-lg-inline-block m-0">
+                                                <button type="button" class="btn btn-ghost-secondary btn-icon" data-bs-toggle="offcanvas" data-bs-target="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">
+                                                    <i data-feather="info" class="icon-sm"></i>
+                                                </button>
+                                            </li>
+
+                                            <li class="list-inline-item m-0">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-ghost-secondary btn-icon" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="more-vertical" class="icon-sm"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a class="dropdown-item d-block d-lg-none user-profile-show" href="#"><i class="ri-user-2-fill align-bottom text-muted me-2"></i> View Profile</a>
+                                                        <a class="dropdown-item" href="#"><i class="ri-inbox-archive-line align-bottom text-muted me-2"></i> Archive</a>
+                                                        <a class="dropdown-item" href="#"><i class="ri-mic-off-line align-bottom text-muted me-2"></i> Muted</a>
+                                                        <a class="dropdown-item" href="#"><i class="ri-delete-bin-5-line align-bottom text-muted me-2"></i> Delete</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- end chat user head -->
+                                <div class="chat-conversation p-3 p-lg-4" id="chat-conversation" data-simplebar>
+                                    <ul class="list-unstyled chat-conversation-list" id="channel-conversation">       
+                                    </ul>
+                                    <!-- end chat-conversation-list -->
+
+                                </div>
+                                <div class="alert alert-warning alert-dismissible copyclipboard-alert px-4 fade show " id="copyClipBoardChannel" role="alert">
+                                    Message copied
+                                </div>
+                            </div> #}
+
+                            <!-- end chat-conversation -->
+
+                            <div class="chat-input-section p-3 p-lg-4">
+
+                                <form id="chatinput-form" enctype="multipart/form-data">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-auto">
+                                            <div class="chat-input-links me-2">
+                                                <div class="links-list-item">
+                                                    <button type="button" class="btn btn-link text-decoration-none emoji-btn" id="emoji-btn">
+                                                        <i class="bx bx-smile align-middle"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="chat-input-links me-2">
+                                                <div class="links-list-item">
+                                                    <button type="button" class="btn btn-link text-decoration-none img-btn" id="img-btn">
+                                                        <input id="img-chats-input" type="file" class="d-none">
+                                                        <label for="img-chats-input" class="mb-0" style="cursor: pointer;">
+                                                                <i class="bx bx-photo-album align-middle"></i>
+                                                        </label>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="chat-input-feedback">
+                                                Please Enter a Message
+                                            </div>
+                                            <input type="text" name="text" class="form-control chat-input bg-light border-light" id="chat-input" placeholder="Type your message..." autocomplete="off">
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="chat-input-links ms-2">
+                                                <div class="links-list-item">
+                                                    <button type="submit" class="btn btn-success chat-send waves-effect waves-light">
+                                                        <i class="ri-send-plane-2-fill align-bottom"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="replyCard">
+                                <div class="card mb-0">
+                                    <div class="card-body py-3">
+                                        <div class="replymessage-block mb-0 d-flex align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h5 class="conversation-name"></h5>
+                                                <p class="mb-0"></p>
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <button type="button" id="close_toggle" class="btn btn-sm btn-link mt-n2 me-n3 fs-18">
+                                                    <i class="bx bx-x align-middle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end chat-wrapper -->
+    </div>
+
+    <!-- A Enlever -->
+
+    {# <li class="chat-list left" id="1">
+        <div class="conversation-list">
+            <div class="chat-avatar">
+                <img src="assets/images/users/avatar-2.jpg" alt="">
+            </div>
+            <div class="user-chat-content">
+                <div class="ctext-wrap">
+                    <div class="ctext-wrap-content" id="1">
+                        <p class="mb-0 ctext-content">Good morning 😊</p>
+                    </div>
+                    <div class="dropdown align-self-start message-box-drop">                
+                        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                    
+                            <i class="ri-more-2-fill"></i>                
+                        </a>                
+                        <div class="dropdown-menu">                    
+                            <a class="dropdown-item reply-message" href="#">
+                                <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                            </a>                    
+                            <a class="dropdown-item" href="#">
+                                <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                            </a>                    
+                            <a class="dropdown-item copy-message" href="#">
+                                <i class="ri-file-copy-line me-2 text-muted align-bottom"></i>Copy
+                            </a>                    
+                            <a class="dropdown-item" href="#">
+                                <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                            </a>                    
+                            <a class="dropdown-item delete-item" href="#">
+                                <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                            </a>                
+                        </div>            
+                    </div>
+                </div>
+                <div class="conversation-name">
+                    <span class="d-none name">Lisa Parker</span>
+                    <small class="text-muted time">09:07 am</small> 
+                    <span class="text-success check-message-icon">
+                        <i class="bx bx-check-double"></i>
+                    </span>
+                </div>
+            </div>                
+        </div>            
+    </li> #}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+     <script>
+        $(function(){
+            /* 
+
+                Left Side Chats 
+                
+            */
+
+            // Add green background to user in dropdown 
+            $('.chat-id').hover(function(){
+                $(this).toggleClass('active')
+            })
+
+            // Add green background to user 
+            var firstChatUser = $('#userList li').first()
+            $('#userList li').first().addClass('active');
+
+            // Load conversation message from first User Chat
+            $.ajax({
+                url: `/app/chats/${firstChatUser.attr('id')[firstChatUser.attr('id').length -1]}/get-chat-message-from-speaker-ajax`,
+                method: 'GET',
+                async: true,
+                beforeSend: function(){
+                    $('#elmLoader').removeClass('d-none');
+                },
+                /* end beforeSend */
+                success: function(data) {
+                    $('#users-conversation').find('li').remove();
+
+                    for (let i = 0; i < $(data).length; i++) {
+                        var position = $(data)[i].user_sender_id_id == {{ currentUserId }} ? 'right' : 'left';
+
+                        $('#users-conversation').append(`
+                            <li class="chat-list ${position}" id="chat-message-${i}">
+                                <div class="conversation-list">
+                                    <div class="chat-avatar ${$(data)[i].user_sender_id_id == {{ currentUserId }} ? "d-none" : ""}">
+                                        <img src="${$(data)[i].user_receiver_id_id == {{ currentUserId }} ? $(data)[i].sender_image : ""}" alt="">
+                                    </div>
+                                    <div class="user-chat-content">
+                                        <div class="ctext-wrap">
+                                            <div class="ctext-wrap-content" id="1">
+                                                <p class="mb-0 ctext-content">${$(data)[i].content}</p>
+                                            </div>
+                                            <div class="dropdown align-self-start message-box-drop">                
+                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                    
+                                                    <i class="ri-more-2-fill"></i>                
+                                                </a>                
+                                                <div class="dropdown-menu">                    
+                                                    <a class="dropdown-item reply-message" href="#">
+                                                        <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                                                    </a>                    
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                                                    </a>                    
+                                                    <a class="dropdown-item copy-message" href="#">
+                                                        <i class="ri-file-copy-line me-2 text-muted align-bottom"></i>Copy
+                                                    </a>                    
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                                                    </a>                    
+                                                    <button class="dropdown-item delete-item" onclick="deleteChatMessage(${$(data)[i].id}, ${i})">
+                                                        <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                                                    </button>                
+                                                </div>            
+                                            </div>
+                                        </div>
+                                        <div class="conversation-name">
+                                            <span class="d-none name">${$(data)[i].user_receiver_id_id == {{ currentUserId }} 
+                                            ? $(data)[i].sender_first_name + ' ' + $(data)[i].sender_last_name : 
+                                            $(data)[i].receiver_first_name + ' ' + $(data)[i].receiver_last_name}</span>
+                                            <small class="text-muted time">${formatAMPM(new Date($(data)[i].created_at))}</small> 
+                                            <span class="text-success check-message-icon">
+                                                <i class="bx bx-check-double"></i>
+                                            </span>
+                                        </div>
+                                    </div>                
+                                </div>            
+                            </li>
+                        `);
+                    }
+
+                    joinChatMessageByBlock()
+
+                    scrollToBottomChat();
+                },
+                /* end success */
+                complete: function(){
+                    $('#elmLoader').addClass('d-none');
+                },
+                /* end complete */
+            });
+            /* end ajax function */
+
+
+            /* 
+            
+                Main page Chat Messages 
+            
+            */
+
+            $('#userList li').on('click', function(){
+                $('#userList li').removeClass('active');
+                var speakerId = $(this).attr('id')[$(this).attr('id').length -1];    
+
+                $('#contact-id-' + speakerId).addClass('active');                  
+
+                // Define username by Chat User in active
+                $('#users-chat').find('.users-chat-content').replaceWith(`
+                    <div class="d-flex align-items-center users-chat-content">
+                        <div class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                            <img src="${$(this).find('img').attr('src')}" class="rounded-circle avatar-xs" alt="">
+                            <span class="user-status"></span>
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <h5 class="text-truncate mb-0 fs-16">
+                            <a class="text-reset username" data-bs-toggle="offcanvas" 
+                            href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">${$(this).text()}</a>
+                            </h5>
+                            <p class="text-truncate text-muted fs-14 mb-0 userStatus"><small>Online</small></p>
+                        </div>
+                    </div>
+                `);
+
+                // Load conversation message when click on User Chat
+                $.ajax({
+                    url: `/app/chats/${speakerId}/get-chat-message-from-speaker-ajax`,
+                    method: 'GET',
+                    async: true,
+                    beforeSend: function(){
+                        $('#elmLoader').removeClass('d-none');
+                    },
+                    /* end beforeSend */
+                    success: function(data) {
+                        $('#users-conversation').find('li').remove();
+
+                        for (let i = 0; i < $(data).length; i++) {
+                            var position = $(data)[i].user_sender_id_id == {{ currentUserId }} ? 'right' : 'left';
+
+                            console.log($(data)[i].chat_image)
+
+                            if($(data)[i].chat_image){
+                                var imageHtml = ''
+                            }
+
+                            $('#users-conversation').append(`
+                                <li class="chat-list ${position}" id="chat-message-${i}">
+                                    <div class="conversation-list">
+                                        <div class="chat-avatar ${$(data)[i].user_sender_id_id == {{ currentUserId }} ? "d-none" : ""}">
+                                            <img src="${$(data)[i].user_receiver_id_id == {{ currentUserId }} ? $(data)[i].sender_image : ""}" alt="">
+                                        </div>
+                                        <div class="user-chat-content">
+                                            <div class="ctext-wrap">
+                                                <div class="ctext-wrap-content" id="1">
+                                                    <p class="mb-0 ctext-content">${$(data)[i].content}</p>
+                                                </div>
+                                                <div class="dropdown align-self-start message-box-drop">                
+                                                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                    
+                                                        <i class="ri-more-2-fill"></i>                
+                                                    </a>                
+                                                    <div class="dropdown-menu">                    
+                                                        <a class="dropdown-item reply-message" href="#">
+                                                            <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                                                        </a>                    
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                                                        </a>                    
+                                                        <a class="dropdown-item copy-message" href="#">
+                                                            <i class="ri-file-copy-line me-2 text-muted align-bottom"></i>Copy
+                                                        </a>                    
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                                                        </a>                    
+                                                        <button class="dropdown-item delete-item" onclick="deleteChatMessage(${$(data)[i].id}, ${i})">
+                                                            <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                                                        </button>                 
+                                                    </div>            
+                                                </div>
+                                            </div>
+                                            <div class="conversation-name">
+                                                <span class="d-none name">${$(data)[i].user_receiver_id_id == {{ currentUserId }} 
+                                                ? $(data)[i].sender_first_name + ' ' + $(data)[i].sender_last_name : 
+                                                $(data)[i].receiver_first_name + ' ' + $(data)[i].receiver_last_name}</span>
+                                                <small class="text-muted time">${formatAMPM(new Date($(data)[i].created_at))}</small> 
+                                                <span class="text-success check-message-icon">
+                                                    <i class="bx bx-check-double"></i>
+                                                </span>
+                                            </div>
+                                        </div>                
+                                    </div>            
+                                </li>
+                            `);
+                        }
+
+                        joinChatMessageByBlock()
+
+                        scrollToBottomChat();
+                    },
+                    /* end success */
+                    complete: function(){
+                        $('#elmLoader').addClass('d-none');
+                    },
+                    /* end complete */
+                });
+                /* end ajax function */
+            }); 
+            /* end on click function */
+
+
+            // Send message on chat
+            $('.chat-send').on('click', function(e){
+                e.preventDefault();
+
+                $.ajax({
+                    url: `/app/chats/send-chat-message-ajax`,
+                    method: 'POST',
+                    async: true,
+                    data: {
+                        'content': $('#chat-input').val(),
+                        'senderId': $('#userList .active').attr('id')[$('#userList .active').attr('id').length -1]
+                    },
+                    success: function(data) {
+                        $('#chat-input').val('');
+                        
+                        $('#users-conversation').append(`
+                            <li class="chat-list right" id="chat-message-${$('#users-conversation li').length + 1}">
+                                <div class="conversation-list">
+                                    <div class="user-chat-content">
+                                        <div class="ctext-wrap">
+                                            <div class="ctext-wrap-content" id="1">
+                                                <p class="mb-0 ctext-content">${$(data)[0].content}</p>
+                                            </div>
+                                            <div class="dropdown align-self-start message-box-drop">                
+                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                    
+                                                    <i class="ri-more-2-fill"></i>                
+                                                </a>                
+                                                <div class="dropdown-menu">                    
+                                                    <a class="dropdown-item reply-message" href="#">
+                                                        <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                                                    </a>                    
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                                                    </a>                    
+                                                    <a class="dropdown-item copy-message" href="#">
+                                                        <i class="ri-file-copy-line me-2 text-muted align-bottom"></i>Copy
+                                                    </a>                    
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                                                    </a>                    
+                                                    <button class="dropdown-item delete-item" onclick="deleteChatMessage(${$(data)[0].id}, ${$('#users-conversation li').length + 1})">
+                                                        <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                                                    </button>                 
+                                                </div>            
+                                            </div>
+                                        </div>
+                                        <div class="conversation-name">
+                                            <span class="d-none name">${$(data)[0].firstNameSender + ' ' + $(data)[0].lastNameSender}</span>
+                                            <small class="text-muted time">${formatAMPM(new Date($(data)[0].date.date))}</small> 
+                                            <span class="text-success check-message-icon">
+                                                <i class="bx bx-check-double"></i>
+                                            </span>
+                                        </div>
+                                    </div>                
+                                </div>            
+                            </li>
+                        `);
+
+                        if($(data)[0].chat_image){
+
+                        $('#chat-message-' + ($('#users-conversation li').length + 1)).find('.ctext-wrap').replaceWith(`
+                            <div class="message-img mb-0">
+                                <div class="message-img-list">
+                                    <div>
+                                        <a class="popup-img d-inline-block" href="${$(data)[0].chat_image}">
+                                            <img class="rounded border" src="${$(data)[0].chat_image}"></img>
+                                        </a>
+                                    </div>
+                                    <div class="message-img-link">                
+                                        <ul class="list-inline mb-0">                    
+                                            <li class="list-inline-item dropdown">                        
+                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                            
+                                                    <i class="ri-more-fill"></i>                        
+                                                </a>                        
+                                                <div class="dropdown-menu">                            
+                                                    <a class="dropdown-item" href="assets/images/small/img-1.jpg" download="">
+                                                        <i class="ri-download-2-line me-2 text-muted align-bottom"></i>Download
+                                                    </a>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                                                    </a>                            
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                                                    </a>                            
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                                                    </a>                            
+                                                    <button class="dropdown-item delete-item" onclick="deleteChatMessage(${$(data)[0].id}, ${$('#users-conversation li').length + 1})">
+                                                        <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                                                    </button>                      
+                                                </div>                    
+                                            </li>                
+                                        </ul>                
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                        }
+
+                        scrollToBottomChat()
+                    },
+                    /* end success */
+                });
+                /* end ajax function */
+            })
+
+
+            //Enable redirection delete chat message button
+            $('.delete-item').on('click', function(e){
+                e.preventDefault();
+            })
+
+            //Add new user contact to chats list
+            $('.chat-id').on('click', function(e){
+                var id = $(this).attr('id')[$(this).attr('id').length -1];   
+
+                $.ajax({
+                    url: `/app/chats/${id}/create-chat-ajax`,
+                    method: 'POST',
+                    async: true,
+                    success: function(data) {
+                        if($(data)[0].status == 200){
+                            $('#userList').append(`
+                                <li id="contact-id-${$(data)[0].user[0].id}" data-name="direct-message">
+                                    <a href="javascript: void(0);">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                <div class="avatar-xxs">
+                                                    <img src="${$(data)[0].user[0].profil_image}" alt="" class="rounded-circle img-fluid user-profile">
+                                                    <span class="user-status"></span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <p class="text-truncate mb-0">${$(data)[0].user[0].first_name} ${$(data)[0].user[0].last_name}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            `)
+                        }
+
+                        var newSpeakerId = $(data)[0].user[0];
+
+                        // Create new user speaker in Chats Side
+                        $('#userList li').removeClass('active');
+                        $('#contact-id-' + newSpeakerId.id).addClass('active')
+
+                        // Load Chat Message
+                        $('#users-chat').find('.users-chat-content').replaceWith(`
+                            <div class="d-flex align-items-center users-chat-content">
+                                <div class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                                    <img src="${newSpeakerId.profil_image}" class="rounded-circle avatar-xs" alt="">
+                                    <span class="user-status"></span>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h5 class="text-truncate mb-0 fs-16">
+                                    <a class="text-reset username" data-bs-toggle="offcanvas" 
+                                    href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">${newSpeakerId.first_name} ${newSpeakerId.last_name}</a>
+                                    </h5>
+                                    <p class="text-truncate text-muted fs-14 mb-0 userStatus"><small>Online</small></p>
+                                </div>
+                            </div>
+                        `);
+
+                        $('#users-conversation').find('li').remove()
+                    }
+                })
+                /* end ajax function */
+            })
+
+            $('.delete-item').on('click', function(e){
+                e.preventDefault();
+            })
+
+            // Add image on Chat Message
+            $('#img-chats-input').on('change', function(e){
+                var file = e.target.files[0];
+                if(['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].indexOf(file.type) == -1) {
+                    $(".replace-with").replaceWith("<div class='alert alert-danger alert-dismissible fade show' role='alert'>Seuls les fichiers JPEG et PNG sont acceptés<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onload = function(){
+                    var data = {'title': 'upload_image', 'file':reader.result};
+
+                    {# $.ajax({               
+                        url: '{{ path("profil_image_upload_ajax") }}',
+                        data: data,
+                        type: 'POST',
+                        success: function(response, isSuccess){
+                            $(".user-profile-image").attr('src', reader.result);
+                            $(".header-profile-user").attr('src', reader.result);
+                            $(".page-content").prepend("<div class='alert alert-success alert-dismissible fade show' role='alert'>L'image de profil a bien été modifié<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                        },
+                        error: function (response){
+                            $(".page-content").prepend("<div class='alert alert-danger alert-dismissible fade show' role='alert'>Un problème est survenu<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+                        }
+                    }); #}
+
+                    $.ajax({
+                        url: '{{ path("chats_image_send_ajax") }}',
+                        method: 'POST',
+                        async: true,
+                        data: {
+                            'title': 'upload_image', 
+                            'file':reader.result,
+                            'senderId': $('#userList .active').attr('id')[$('#userList .active').attr('id').length -1]
+                        },
+                        success: function(data) {
+                            $('#chat-input').val('');
+                            
+                            $('#users-conversation').append(`
+                                <li class="chat-list right" id="chat-message-${$('#users-conversation li').length + 1}">
+                                    <div class="conversation-list">
+                                        <div class="user-chat-content">
+                                            <div class="ctext-wrap">
+                                                <div class="message-img mb-0">
+                                                    <div class="message-img-list">
+                                                        <div>
+                                                            <a class="popup-img d-inline-block" href="${$(data)[0].image}">
+                                                                <img class="rounded border" src="${$(data)[0].image}"></img>
+                                                            </a>
+                                                        </div>
+                                                        <div class="message-img-link">                
+                                                            <ul class="list-inline mb-0">                    
+                                                                <li class="list-inline-item dropdown">                        
+                                                                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                            
+                                                                        <i class="ri-more-fill"></i>                        
+                                                                    </a>                        
+                                                                    <div class="dropdown-menu">                            
+                                                                        <a class="dropdown-item" href="assets/images/small/img-1.jpg" download="">
+                                                                            <i class="ri-download-2-line me-2 text-muted align-bottom"></i>Download
+                                                                        </a>
+                                                                        <a class="dropdown-item" href="#">
+                                                                            <i class="ri-reply-line me-2 text-muted align-bottom"></i>Reply
+                                                                        </a>                            
+                                                                        <a class="dropdown-item" href="#">
+                                                                            <i class="ri-share-line me-2 text-muted align-bottom"></i>Forward
+                                                                        </a>                            
+                                                                        <a class="dropdown-item" href="#">
+                                                                            <i class="ri-bookmark-line me-2 text-muted align-bottom"></i>Bookmark
+                                                                        </a>                            
+                                                                        <a class="dropdown-item delete-image" href="#">
+                                                                            <i class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
+                                                                        </a>                        
+                                                                    </div>                    
+                                                                </li>                
+                                                            </ul>                
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="conversation-name">
+                                                <span class="d-none name">${$(data)[0].firstNameSender + ' ' + $(data)[0].lastNameSender}</span>
+                                                <small class="text-muted time">${formatAMPM(new Date($(data)[0].date.date))}</small> 
+                                                <span class="text-success check-message-icon">
+                                                    <i class="bx bx-check-double"></i>
+                                                </span>
+                                            </div>
+                                        </div>                
+                                    </div>            
+                                </li>
+                            `);
+
+                            scrollToBottomChat()
+                        },
+                        /* end success */
+                    });
+                /* end ajax function */
+                };
+                reader.readAsDataURL(file); 
+            })
+        })
+        /* end main function */
+
+        function deleteChatMessage(id, i){
+            $.ajax({
+                url: `/app/chats/${id}/delete-chat-message-ajax`,
+                method: 'PUT',
+                async: true
+            });
+
+            $('#chat-message-' + i).remove();
+        }
+
+        function formatAMPM(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
+
+        function joinChatMessageByBlock(){
+            $('#users-conversation').find('li').each(function(el){
+                var thisChat = $('#users-conversation').find('li')[el].classList[1]
+                var afterChat = $('#users-conversation').find('li')[el == $('#users-conversation').find('li').length-1 ? el : el+1].classList[1]
+
+                if(thisChat == afterChat && el < $('#users-conversation').find('li').length -1){
+                    $(this).find('.conversation-list').addClass('mb-0')
+                    $(this).find('.conversation-name').addClass('d-none')
+                }
+            })
+        }
+
+        function scrollToBottomChat(){
+            setTimeout(function () {
+                $('#chat-conversation .simplebar-content-wrapper').scrollTop(
+                    $('.chat-conversation-list')[0].scrollHeight - window.innerHeight + 335
+                );
+            }, 100);
+        }
+     </script>
+    
+{% endblock %}

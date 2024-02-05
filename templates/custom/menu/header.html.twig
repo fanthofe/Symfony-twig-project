@@ -1,0 +1,46 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-landing navbar-light fixed-top
+    {{ (path(app.request.attributes.get('_route'),app.request.get('_route_params')) == '/') ? '' : 'is-sticky' }}" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path('home') }}">
+                <img src="/images/logo-dark.png" class="card-logo card-logo-dark" alt="logo dark" height="17">
+                <img src="/images/logo-light.png" class="card-logo card-logo-light" alt="logo light" height="17">
+            </a>
+            <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="mdi mdi-menu"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
+                    <li class="nav-item">
+                        <a class="nav-link 
+                        {{ (path(app.request.attributes.get('_route'),app.request.get('_route_params')) == '/') ? 'active' : '' }}" 
+                        href="{{ path('home') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link
+
+                        {% if (path(app.request.attributes.get('_route'), app.request.get('_route_params')) == '/actualites' or
+                        path(app.request.attributes.get('_route'), app.request.get('_route_params'))|slice(0,8) == '/article')%}
+                            {{ 'active' }}
+                        {% endif %}
+
+                        " 
+                        href="{{ path('actuality') }}">Actualités</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link 
+                        {{ (path(app.request.attributes.get('_route'),app.request.get('_route_params')) == '/contact') ? 'active' : '' }}" 
+                        href="{{ path('contact') }}">Contact</a>
+                    </li>
+                </ul>
+
+                <div class="">
+                    <a href="{{ path('app_login') }}" class="btn btn-success">Connexion</a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="bg-overlay bg-overlay-pattern"></div>
+</header>

@@ -1,0 +1,247 @@
+<div class="row">
+    <div class="col-xxl-5">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Évènements en cours</h4>
+            </div><!-- end card header -->
+            <div class="card-body pt-0">
+                <ul class="list-group list-group-flush border-dashed list-group-events">
+                    {% for event in events.data %}
+                        <li class="list-group-item ps-0">
+                            <div class="row align-items-center g-3">
+                                <div class="col-auto">
+                                    <div class="avatar-sm p-1 py-2 h-auto bg-light rounded-3">
+                                        <div class="text-center">
+                                            <h5 class="numberDate mb-0">{{ event.startDate|date('d') }}</h5>
+                                            <div class="dayDate text-muted">{{ event.startDate|date('D') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h5 class="time text-muted mt-0 mb-1 fs-13">{{ event.startDate|date('H:i') }} - {{ event.endDate|date('H:i') }}</h5>
+                                    <a class="eventName text-reset fs-14 mb-0">{{ event.name }}</a>
+                                </div>
+                                <div class="col-sm-auto">
+                                    <div class="avatar-group">
+                                        {% for user in event.userDateEvents %}
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="userName d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ user.user.firstName }} {{ user.user.lastName }}">
+                                                    <img src="{{ user.user.profilImage }}" alt="" class="userImage rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+
+                                        <div class="avatar-group-item">
+                                            <a href="javascript: void(0);">
+                                                <div class="avatar-xxs">
+                                                    <span class="userLength avatar-title rounded-circle bg-info text-white">
+                                                        {{ event.userDateEvents|length }}
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </li><!-- end -->
+                    {% endfor %}
+                </ul><!-- end -->
+                <div class="align-items-center mt-2 row text-center text-sm-start">
+                    <div class="col-sm">
+                        <div class="text-muted">Affichage de <span class="number fw-semibold">{{ events.limit }}</span> sur <span class="fw-semibold">{{ nbAllEvents }}</span> résultats</div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <ul class="pagination pagination-separated pagination-sm justify-content-center justify-content-sm-start mb-0">
+                            <li class="page-item">
+                                <a class="prev-button page-link disabled">←</a>
+                            </li>
+                            {% for i in 1..events.pages %}
+                                {% if i == 1 %}
+                                    <li class="page-item">
+                                        <a class="page-number page-link active">{{ i }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-number page-link">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            <li class="page-item">
+                                <a class="next-button page-link">→</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div> <!-- end col-->
+</div>
+<!-- end row-->
+
+{% block javascripts %}
+
+<script>
+
+    $(function(){
+        try {
+            var currentPage = 1;
+            const number = $('.number').text();
+            var maxNumber = {{ nbAllEvents }};
+            var allPages = {{ events.pages }};
+            const options = { weekday: "long" };
+
+
+            $('.page-number').on('click', function(){
+                $('.page-number').removeClass('active')
+                $(this).addClass('active');
+                
+                currentPage = parseInt($(this).text());
+
+                if(currentPage == allPages){
+                    $('.next-button').addClass('disabled');
+                    $('.number').replaceWith('<span class="number fw-semibold">' + maxNumber + '</span>');
+                } else if(currentPage == 1){
+                    $('.prev-button').addClass('disabled');
+                } else {
+                    $('.prev-button').removeClass('disabled');
+                    $('.next-button').removeClass('disabled');
+                    $('.number').replaceWith('<span class="number fw-semibold">' + number * currentPage + '</span>');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+            $('.next-button').on('click', function(){
+
+                $('.prev-button').removeClass('disabled');
+                currentPage++;
+                $('.page-number').removeClass('active');
+
+                $('.page-number').each(function(i){
+                    if(i == currentPage - 1){
+                        $(this).addClass('active')
+                    }
+                })
+                
+                $('.number').replaceWith('<span class="number fw-semibold">' + number * currentPage + '</span>');
+
+                if(currentPage == allPages){
+                    $(this).addClass('disabled');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+            $('.prev-button').on('click', function(){
+                $('.next-button').removeClass('disabled');
+                currentPage--;
+                $('.page-number').removeClass('active');
+
+                $('.page-number').each(function(i){
+                    if(i == currentPage - 1){
+                        $(this).addClass('active')
+                    }
+                })
+
+                $('.number').replaceWith('<span class="number fw-semibold">' + number * currentPage + '</span>');
+                
+                if(currentPage == 1){
+                    $(this).addClass('disabled');
+                }
+
+                eventAjax(currentPage, number, options);
+            });
+
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    });
+
+    function eventAjax(currentPage, number, options){
+        $.ajax({
+            url: `/app/component/pagination-ajax`,
+            method: 'POST',
+            data: {
+                'currentPage' : currentPage,
+                'limit' : number
+            },
+            success: function(data){   
+
+                if(data.data.length){
+                    $('.list-group-item').remove();
+
+                    for(let i=0; i < data.data.length; i++){
+                        var numberDate = new Date(data.data[i].startDate.date).getDate().toString().length > 1 ? new Date(data.data[i].startDate.date).getDate().toString() : '0' + new Date(data.data[i].startDate.date).getDate().toString();                            
+
+                        var dayDate = new Date(data.data[i].startDate.date);
+                        dayDate = new Intl.DateTimeFormat("fr-FR", options).format(dayDate);
+                        var day = dayDate[0].toUpperCase() + dayDate.slice(1,3);
+
+                        var startTimeHours = new Date(data.data[i].startDate.date).getHours().toString().length > 1 ? new Date(data.data[i].startDate.date).getHours().toString() : '0' + new Date(data.data[i].startDate.date).getHours().toString() 
+                        var startTimeMinutes = new Date(data.data[i].startDate.date).getMinutes().toString().length > 1 ? new Date(data.data[i].startDate.date).getMinutes().toString() : '0' + new Date(data.data[i].startDate.date).getMinutes().toString() 
+                        var startTime = startTimeHours + ':' + startTimeMinutes;
+
+                        var endTimeHours = new Date(data.data[i].endDate.date).getHours().toString().length > 1 ? new Date(data.data[i].endDate.date).getHours().toString() : '0' + new Date(data.data[i].endDate.date).getHours().toString() 
+                        var endTimeMinutes = new Date(data.data[i].endDate.date).getMinutes().toString().length > 1 ? new Date(data.data[i].endDate.date).getMinutes().toString() : '0' + new Date(data.data[i].endDate.date).getMinutes().toString() 
+                        var endTime = endTimeHours + ':' + endTimeMinutes;
+
+                        $('.list-group-events').append(`
+                            <li class="list-group-item ps-0">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-auto">
+                                        <div class="avatar-sm p-1 py-2 h-auto bg-light rounded-3">
+                                            <div class="text-center">
+                                                <h5 class="numberDate mb-0">${numberDate}</h5>
+                                                <div class="dayDate text-muted">${day}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="time text-muted mt-0 mb-1 fs-13">${startTime} - ${endTime}</h5>
+                                        <a class="eventName text-reset fs-14 mb-0">${data.data[i].name}</a>
+                                    </div>
+                                    <div class="col-sm-auto">
+                                        <div class="avatar-group">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+                            </li><!-- end -->
+                        `);
+                    }
+                }
+
+                $('.avatar-group').each(function(el){
+                    $(this).find('.avatar-group-item').remove();
+
+                    for(let i = 0; i < data.data[el].users.length; i++){
+                        if(i != data.data[el].users.length - 1){
+                            $(this).append(`
+                                <div class="avatar-group-item">
+                                    <a href="javascript: void(0);" class="userName d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="${data.data[el].users[i].firstName} ${data.data[el].users[i].lastName}">
+                                        <img src="${data.data[el].users[i].profilImage}" alt="" class="userImage rounded-circle avatar-xxs">
+                                    </a>
+                                </div>
+                            `);
+                        } else {
+                            $(this).append(`
+                                <div class="avatar-group-item">
+                                    <a href="javascript: void(0);">
+                                        <div class="avatar-xxs">
+                                            <span class="userLength avatar-title rounded-circle bg-info text-white">
+                                                ${data.data[el].users.length}
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            `);
+                        }
+                    }
+                })
+            }
+        });
+    }
+</script>
+    
+{% endblock %}

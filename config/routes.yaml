@@ -1,0 +1,11 @@
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
+client_list_gridjs:
+    path: /client-gridjs
+    controller: App\Controller\ClientController::getDataForGridjs
+
+app_logout:
+    path: /logout
+    methods: GET
